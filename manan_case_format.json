@@ -1,0 +1,124 @@
+{
+  "case_id": "BIZ-1-CASE-001",
+  "module": "Hyper-Local Business Opportunity Intelligence + Temporal Reliability",
+  "contributor": "Manan",
+  "branch": "BIZ-1-geospatial-opportunity",
+  "version": "0.1.0",
+
+  "input_schema": {
+    "user_profile": {
+      "entrepreneur_name": "string",
+      "business_type": "string (e.g. dairy, grocery, tailoring)",
+      "location": {
+        "latitude": "float",
+        "longitude": "float",
+        "village_town": "string",
+        "district": "string",
+        "state": "string"
+      },
+      "catchment_radius_m": "integer (500 | 1000 | 2000 | 5000)"
+    }
+  },
+
+  "spatial_features": {
+    "competition": {
+      "competitor_count": "integer",
+      "competitor_density_per_km2": "float",
+      "nearest_competitor_distance_m": "float",
+      "avg_competitor_distance_m": "float"
+    },
+    "demand_proxies": {
+      "population_density_per_km2": "float",
+      "catchment_population": "integer",
+      "household_count": "integer"
+    },
+    "points_of_interest": {
+      "schools_count": "integer",
+      "hospitals_count": "integer",
+      "banks_count": "integer",
+      "markets_count": "integer",
+      "transport_hubs_count": "integer"
+    },
+    "accessibility": {
+      "distance_to_road_m": "float",
+      "distance_to_market_m": "float",
+      "distance_to_bank_m": "float",
+      "road_type": "string (primary | secondary | residential | track)"
+    },
+    "grid": {
+      "h3_cell_index": "string",
+      "geohash": "string"
+    }
+  },
+
+  "temporal_metadata": {
+    "competitor_data": {
+      "source": "OpenStreetMap",
+      "collection_date": "YYYY-MM-DD",
+      "days_old": "integer",
+      "update_frequency": "string (monthly | quarterly | annual)",
+      "freshness_score": "float (0.0 – 1.0)"
+    },
+    "population_data": {
+      "source": "Census / State Govt",
+      "collection_date": "YYYY-MM-DD",
+      "days_old": "integer",
+      "freshness_score": "float"
+    },
+    "poi_data": {
+      "source": "OpenStreetMap",
+      "collection_date": "YYYY-MM-DD",
+      "days_old": "integer",
+      "freshness_score": "float"
+    },
+    "overall_confidence": "string (High | Medium | Low)",
+    "drift_detected": "boolean",
+    "revalidation_recommended": "boolean"
+  },
+
+  "output_schema": {
+    "opportunity_score": "float (0.0 – 1.0)",
+    "opportunity_category": "string (High | Moderate | Low)",
+    "profile": {
+      "demand_potential": "string",
+      "competition_pressure": "string",
+      "accessibility": "string",
+      "supplier_access": "string",
+      "infrastructure": "string",
+      "data_confidence": "string"
+    },
+    "shap_explanation": {
+      "top_positive_factors": ["string"],
+      "top_negative_factors": ["string"],
+      "feature_contributions": "object"
+    },
+    "temporal_summary": {
+      "overall_confidence": "string",
+      "oldest_feature_days": "integer",
+      "recommendation": "string"
+    }
+  },
+
+  "example_case": {
+    "input": {
+      "entrepreneur_name": "Ramesh Kumar",
+      "business_type": "dairy",
+      "location": {
+        "latitude": 19.0760,
+        "longitude": 72.8777,
+        "village_town": "Vasai",
+        "district": "Palghar",
+        "state": "Maharashtra"
+      },
+      "catchment_radius_m": 1000
+    },
+    "output": {
+      "opportunity_score": null,
+      "opportunity_category": "Pending — model not yet trained",
+      "temporal_summary": {
+        "overall_confidence": "Pending",
+        "recommendation": "Integration in progress"
+      }
+    }
+  }
+}
