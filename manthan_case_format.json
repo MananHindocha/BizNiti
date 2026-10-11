@@ -1,0 +1,136 @@
+{
+  "case_id": "BIZ-3-CASE-001",
+  "module": "Financial Feasibility & Capital Structuring + Government Scheme Intelligence",
+  "contributor": "Manthan",
+  "branch": "BIZ-3-financial-schemes",
+  "version": "0.1.0",
+
+  "input_schema": {
+    "financial_profile": {
+      "project_cost": "float (INR)",
+      "equipment_cost": "float (INR)",
+      "working_capital": "float (INR)",
+      "rent_deposit": "float (INR)",
+      "inventory_cost": "float (INR)",
+      "own_capital": "float (INR)",
+      "available_savings": "float (INR)",
+      "monthly_revenue_estimate": "float (INR)",
+      "fixed_costs_monthly": "float (INR)",
+      "variable_cost_ratio": "float (0.0 – 1.0)",
+      "seasonality_factor": "float (optional)",
+      "loan_interest_rate_annual": "float",
+      "loan_tenure_months": "integer",
+      "scheme_subsidy": "float (INR, from Module 4)"
+    },
+    "entrepreneur_profile": {
+      "age": "integer",
+      "gender": "string",
+      "category": "string (SC | ST | OBC | General)",
+      "business_type": "string",
+      "sector": "string",
+      "location_state": "string",
+      "location_district": "string",
+      "annual_income": "float (INR)",
+      "existing_registrations": ["string"]
+    }
+  },
+
+  "deterministic_outputs": {
+    "funding_gap": "float (INR)",
+    "monthly_emi": "float (INR)",
+    "monthly_cashflow": "float (INR)",
+    "breakeven_revenue": "float (INR/month)",
+    "debt_equity_ratio": "float",
+    "dscr": "float",
+    "dscr_status": "string (Healthy | At Risk | Critical)",
+    "working_capital_requirement": "float (INR)",
+    "cash_reserve_months": "float"
+  },
+
+  "scenario_analysis": {
+    "monte_carlo": {
+      "n_simulations": "integer (default 10000)",
+      "mean_cashflow": "float",
+      "std_cashflow": "float",
+      "p5_cashflow": "float",
+      "p95_cashflow": "float",
+      "prob_negative_cashflow": "float (0.0 – 1.0)"
+    },
+    "stress_scenarios": {
+      "revenue_drop_20pct": { "cashflow": "float", "dscr": "float" },
+      "cost_increase_15pct": { "cashflow": "float", "dscr": "float" },
+      "combined_stress": { "cashflow": "float", "dscr": "float" }
+    }
+  },
+
+  "capital_structure_optimization": {
+    "method": "MILP (PuLP)",
+    "objective": "Minimize total interest cost + risk penalty",
+    "constraints": [
+      "own_capital + loan + subsidy == project_cost",
+      "loan <= max_loan_limit",
+      "subsidy <= max_scheme_subsidy",
+      "DSCR >= 1.25"
+    ],
+    "recommended": {
+      "own_capital": "float (INR)",
+      "loan_amount": "float (INR)",
+      "scheme_subsidy": "float (INR)",
+      "total_interest_estimated": "float (INR)",
+      "optimization_status": "string (Optimal | Infeasible | Pending)"
+    }
+  },
+
+  "scheme_intelligence": {
+    "query": "string (derived from entrepreneur profile)",
+    "retrieval_method": "string (bm25 | dense | hybrid | hybrid+rerank)",
+    "candidates_retrieved": "integer",
+    "eligible_schemes": [
+      {
+        "scheme_name": "string",
+        "ministry": "string",
+        "state": "string | null",
+        "sector": "string",
+        "loan_limit": "float (INR)",
+        "subsidy_percent": "float",
+        "interest_support": "string",
+        "repayment_period_months": "integer",
+        "collateral_required": "boolean",
+        "eligibility_status": "string (Eligible | Possibly Eligible | Not Eligible | Needs Verification)",
+        "financial_compatibility": "string (High | Medium | Low)",
+        "source_url": "string",
+        "last_verified_date": "string (YYYY-MM-DD)",
+        "version": "string"
+      }
+    ]
+  },
+
+  "example_case": {
+    "input": {
+      "project_cost": 500000,
+      "own_capital": 100000,
+      "scheme_subsidy": 50000,
+      "monthly_revenue_estimate": 80000,
+      "fixed_costs_monthly": 25000,
+      "variable_cost_ratio": 0.30,
+      "loan_interest_rate_annual": 0.10,
+      "loan_tenure_months": 60,
+      "business_type": "dairy",
+      "sector": "agriculture",
+      "location_state": "Maharashtra",
+      "age": 32,
+      "gender": "Male",
+      "category": "OBC"
+    },
+    "output": {
+      "funding_gap": 350000,
+      "monthly_emi": 7441.50,
+      "monthly_cashflow": 12558.50,
+      "dscr": 1.68,
+      "dscr_status": "Healthy",
+      "breakeven_revenue": 35714.29,
+      "prob_negative_cashflow": "4.2%",
+      "eligible_schemes": "Pending — scheme database integration in progress"
+    }
+  }
+}
