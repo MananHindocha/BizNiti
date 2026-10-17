@@ -2,7 +2,13 @@
 
 BizNiti is a prototype for helping entrepreneurs assess small-business opportunities and understand the financial feasibility of starting a business. The project is organized as modular work: the notebooks in this repository explore local-market opportunity analysis and business financing, with government-scheme intelligence planned as a connected capability.
 
-> **Project status:** This is a research/prototyping repository, not a production application. Several planned features are currently placeholders. Outputs should not be used as investment, lending, or eligibility advice.
+<<<<<<< HEAD
+> **Project status:** This is a research/prototyping repository, not a production application. Several planned features are currently placeholders.
+=======
+> **Project status:** Merge-conflict demonstration.
+>>>>>>> demo-merge-conflict
+
+> Outputs should not be used as investment, lending, or eligibility advice.
 
 ## What is in this repository
 
